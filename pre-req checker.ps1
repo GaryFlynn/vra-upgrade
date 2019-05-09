@@ -1,4 +1,4 @@
-﻿$role = Read-Host -Prompt "Enter the vRA Role ie. DEM/WEB"
+﻿$role = Read-Host -Prompt "Enter the vRA Role ie. DEM/WEB/DEM and WEB"
 
 function SchUseStrongCrypto {
     $path = "HKLM:\SOFTWARE\Microsoft\.NETFramework\v4.0.30319"
@@ -73,16 +73,17 @@ function tls12 {
     Write-Host -ForegroundColor Green "Created..." $path"\"$name "with value" $value
 }
 
-if ($role = "DEM") {
+if ($role.ToUpper().Contains("DEM")) {
     SchUseStrongCrypto
     SystemDefaultTlsVersions
     NonHTTPActivation
 }
 
-if ($role = "WEB") {
+if ($role.ToUpper().Contains("WEB")) {
     SchUseStrongCrypto
     SystemDefaultTlsVersions
     Java
     tls12
 }
+
 
