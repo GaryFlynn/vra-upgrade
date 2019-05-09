@@ -1,4 +1,4 @@
-﻿$role = Read-Host -Prompt "Enter the vRA Role ie. DEM/WEB/DEM and WEB"
+﻿$role = Read-Host -Prompt "Enter the vRA Role ie. DEM / WEB / Agent / DEM and WEB" 
 
 function SchUseStrongCrypto {
     $path = "HKLM:\SOFTWARE\Microsoft\.NETFramework\v4.0.30319"
@@ -30,7 +30,7 @@ function SystemDefaultTlsVersions {
 
 function NonHTTPActivation {
     $name = "NET-Non-HTTP-Activ"
-    Install-WindowsFeature -Name $name
+    Install-WindowsFeature -Name $name -WarningAction SilentlyContinue | Out-Null
     Write-Host -ForegroundColor Green "Added Windows Feature" $name
 }
 
@@ -41,11 +41,11 @@ function Java {
             Write-Host -ForegroundColor Green "Java 8 update 181 is installed"
         }
         else {
-            Write-Host -ForegroundColor Red "INSTALL JAVA 8 UPDATE 181 MANUALLY"
+            Write-Host -ForegroundColor DarkRed "INSTALL JAVA 8 UPDATE 181 MANUALLY"
         }
     }
     else {
-        Write-Host -ForegroundColor Red "JAVA_HOME variable not set!"
+        Write-Host -ForegroundColor DarkRed "JAVA_HOME variable not set!"
     }
 }
 
@@ -74,16 +74,23 @@ function tls12 {
 }
 
 if ($role.ToUpper().Contains("DEM")) {
+    Write-Host -ForegroundColor Cyan "Running DEM Pre-Requisite Checker"
     SchUseStrongCrypto
     SystemDefaultTlsVersions
     NonHTTPActivation
 }
 
 if ($role.ToUpper().Contains("WEB")) {
+    Write-Host -ForegroundColor Cyan "Running WEB Pre-Requisite Checker"
     SchUseStrongCrypto
     SystemDefaultTlsVersions
     Java
     tls12
 }
 
-
+if ($role.ToUpper().Contains("AGENT")) {
+    Write-Host -ForegroundColor Cyan "Running Agent Pre-Requisite Checker"
+    SchUseStrongCrypto
+    SystemDefaultTlsVersions
+    NonHTTPActivation
+}
